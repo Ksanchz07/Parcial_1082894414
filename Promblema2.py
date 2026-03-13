@@ -1,90 +1,105 @@
-def agregar_producto(inventario):
-    nombre = input("Ingresa el nombre del producto: ").strip()
-    if nombre in inventario:
-        print("El producto ya existe.")
-        return
-    try:
-        cantidad = int(input("Ingresa la cantidad: "))
-        if cantidad <= 0:
-            print("La cantidad debe ser un número positivo.")
-            return
-        precio = float(input("Ingresa el precio: "))
-        if precio <= 0:
-            print("El precio debe ser un número positivo.")
-            return
-        inventario[nombre] = {'cantidad': cantidad, 'precio': precio}
-        print("Producto agregado exitosamente.")
-    except ValueError:
-        print("Cantidad y precio deben ser números válidos.")
+# Programa de gestión de inventario simple
 
-def ver_inventario(inventario):
+# Diccionario para almacenar los productos
+# La clave será el nombre del producto y el valor será otro diccionario con cantidad y precio
+inventario = {}
+
+# Función para agregar un producto
+def agregar_producto():
+    nombre = input("Ingrese el nombre del producto: ")
+    if nombre in inventario:
+        print("El producto ya existe en el inventario.")
+        return
+    
+    try:
+        cantidad = int(input("Ingrese la cantidad: "))
+        precio = float(input("Ingrese el precio: "))
+        
+        # Validar que cantidad y precio sean positivos
+        if cantidad <= 0 or precio <= 0:
+            print("La cantidad y el precio deben ser positivos.")
+            return
+        
+        inventario[nombre] = {"cantidad": cantidad, "precio": precio}
+        print("Producto agregado correctamente.")
+    except ValueError:
+        print("Error: cantidad debe ser número entero y precio debe ser número decimal.")
+
+# Función para ver el inventario completo
+def ver_inventario():
     if not inventario:
         print("El inventario está vacío.")
-        return
-    print("Inventario:")
-    for nombre, datos in inventario.items():
-        total = datos['cantidad'] * datos['precio']
-        print(f"- {nombre}: Cantidad: {datos['cantidad']}, Precio: {datos['precio']:.2f}, Total: {total:.2f}")
+    else:
+        total = 0
+        print("\n--- Inventario ---")
+        for nombre, datos in inventario.items():
+            subtotal = datos["cantidad"] * datos["precio"]
+            total += subtotal
+            print(f"{nombre} - Cantidad: {datos['cantidad']} - Precio: {datos['precio']} - Subtotal: {subtotal}")
+        print(f"Total en pesos: {total}\n")
 
-def buscar_producto(inventario):
-    nombre = input("Ingresa el nombre del producto a buscar: ").strip()
+# Función para buscar un producto por nombre
+def buscar_producto():
+    nombre = input("Ingrese el nombre del producto a buscar: ")
     if nombre in inventario:
         datos = inventario[nombre]
-        total = datos['cantidad'] * datos['precio']
-        print(f"Producto encontrado: {nombre}")
-        print(f"Cantidad: {datos['cantidad']}, Precio: {datos['precio']:.2f}, Total: {total:.2f}")
+        print(f"{nombre} - Cantidad: {datos['cantidad']} - Precio: {datos['precio']}")
     else:
         print("Producto no encontrado.")
 
-def actualizar_cantidad(inventario):
-    nombre = input("Ingresa el nombre del producto a actualizar: ").strip()
-    if nombre not in inventario:
+# Función para actualizar la cantidad de un producto
+def actualizar_cantidad():
+    nombre = input("Ingrese el nombre del producto a actualizar: ")
+    if nombre in inventario:
+        try:
+            nueva_cantidad = int(input("Ingrese la nueva cantidad: "))
+            if nueva_cantidad <= 0:
+                print("La cantidad debe ser positiva.")
+                return
+            inventario[nombre]["cantidad"] = nueva_cantidad
+            print("Cantidad actualizada correctamente.")
+        except ValueError:
+            print("Error: la cantidad debe ser un número entero.")
+    else:
         print("Producto no encontrado.")
-        return
-    try:
-        nueva_cantidad = int(input("Ingresa la nueva cantidad: "))
-        if nueva_cantidad <= 0:
-            print("La cantidad debe ser un número positivo.")
-            return
-        inventario[nombre]['cantidad'] = nueva_cantidad
-        print("Cantidad actualizada exitosamente.")
-    except ValueError:
-        print("La cantidad debe ser un número entero válido.")
 
-def eliminar_producto(inventario):
-    nombre = input("Ingresa el nombre del producto a eliminar: ").strip()
+# Función para eliminar un producto
+def eliminar_producto():
+    nombre = input("Ingrese el nombre del producto a eliminar: ")
     if nombre in inventario:
         del inventario[nombre]
-        print("Producto eliminado exitosamente.")
+        print("Producto eliminado correctamente.")
     else:
         print("Producto no encontrado.")
 
+# Función principal para mostrar el menú
 def menu():
-    inventario = {}
     while True:
-        print("\nMenú de Inventario:")
+        print("\n--- Menú de Inventario ---")
         print("1. Agregar producto")
         print("2. Ver inventario")
         print("3. Buscar producto")
         print("4. Actualizar cantidad")
         print("5. Eliminar producto")
         print("6. Salir")
-        opcion = input("Elige una opción: ").strip()
-        if opcion == '1':
-            agregar_producto(inventario)
-        elif opcion == '2':
-            ver_inventario(inventario)
-        elif opcion == '3':
-            buscar_producto(inventario)
-        elif opcion == '4':
-            actualizar_cantidad(inventario)
-        elif opcion == '5':
-            eliminar_producto(inventario)
-        elif opcion == '6':
-            print("Saliendo del programa.")
+        
+        opcion = input("Seleccione una opción: ")
+        
+        if opcion == "1":
+            agregar_producto()
+        elif opcion == "2":
+            ver_inventario()
+        elif opcion == "3":
+            buscar_producto()
+        elif opcion == "4":
+            actualizar_cantidad()
+        elif opcion == "5":
+            eliminar_producto()
+        elif opcion == "6":
+            print("Saliendo del programa...")
             break
         else:
-            print("Opción inválida. Intenta de nuevo.")
+            print("Opción inválida. Intente nuevamente.")
 
-if __name__ == "__main__":
-    menu()
+# Ejecutar el programa
+menu()
